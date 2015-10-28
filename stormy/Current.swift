@@ -7,6 +7,8 @@
 //
 
 import Foundation
+import UIKit
+
 
 struct Current {
     private var _currentTime: String?
@@ -14,9 +16,9 @@ struct Current {
     private var _humidity: Double
     private var _precipProbability: Double
     private var _summary: String
-    private var _icon: String
+    private var _icon: UIImage?
     private var _currentTimeIntValue: Int
-    
+    private var _iconString: String
     
     var  currentTime: String {
         return _currentTime!
@@ -39,8 +41,8 @@ struct Current {
         return _summary
     }
     
-    var icon: String {
-        return _icon
+    var icon: UIImage {
+        return _icon!
     }
     
     
@@ -50,12 +52,12 @@ struct Current {
         let currentWeather = weatherDictionary["currently"] as! NSDictionary
         
          _currentTimeIntValue = currentWeather["time"] as! Int
-        
+        _iconString = currentWeather["icon"] as! String
         _temperature = currentWeather["temperature"] as! Int
         _humidity = currentWeather["humidity"] as! Double
         _precipProbability = currentWeather["precipProbability"] as! Double
         _summary = currentWeather["summary"] as! String
-        _icon = currentWeather["icon"] as! String
+        _icon = weatherIconFromString(_iconString)
         _currentTime = dateStringFromUnixTime(_currentTimeIntValue)
         
     }
@@ -77,6 +79,41 @@ struct Current {
         
     }
     
+    func weatherIconFromString(stringIcon: String) -> UIImage {
+        
+        var imageName: String
+        
+        switch stringIcon {
+        case "clear-day":
+            imageName = "clear-day"
+        case "clear-night":
+            imageName = "clear-night"
+        case "rain":
+            imageName = "rain"
+        case "snow":
+            imageName = "snow"
+        case "sleet":
+            imageName = "sleet"
+        case "wind":
+            imageName = "wind"
+        case "fog":
+            imageName = "fog"
+        case "cloudy":
+            imageName = "cloudy"
+        case "partly-cloudy-day":
+            imageName = "partly-cloudy"
+        case "partly-cloudy-night":
+            imageName = "cloudy-night"
+        default:
+            imageName = "default"
+        }
+        
+        let iconName = UIImage(named: imageName)
+        return iconName!
+            
+        }
+        
+        
+    }
     
     
-}
